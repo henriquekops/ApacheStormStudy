@@ -7,16 +7,26 @@ import org.apache.storm.spout.SpoutOutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.IRichSpout;
 import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
 import org.apache.storm.utils.Utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class BasicSpout implements IRichSpout {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(BasicSpout.class);
 
     SpoutOutputCollector collector;
+    Random rand;
+    String[] words;
 
     @Override
     public void open(Map<String, Object> conf, TopologyContext context, SpoutOutputCollector collector) {
         this.collector = collector;
+        this.rand = new Random();
+        this.words = new String[] {"apache", "storm", "is", "awesome"};
     }
 
     @Override
@@ -34,9 +44,10 @@ public class BasicSpout implements IRichSpout {
     @Override
     public void nextTuple() {
         Utils.sleep(100);
-        final String[] words = new String[] {"apache", "storm", "is", "awesome"};
-        final Random rand = new Random();
-        final String word = words[rand.nextInt(words.length)];
+        final String word = this.words[this.rand.nextInt(words.length)];
+        
+        LOG.info("Emitting tuple: {}", word);
+
         this.collector.emit(new Values(word));
     }
 
@@ -50,10 +61,12 @@ public class BasicSpout implements IRichSpout {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
+        declarer.declare(new Fields("word"));
     }
 
     @Override
     public Map<String, Object> getComponentConfiguration() {
         return null;
     }    
+
 }
