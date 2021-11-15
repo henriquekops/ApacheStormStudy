@@ -23,7 +23,8 @@
 hs_err_pid*
 
 # project
-apache-maven-*/
-apache-storm-*/
-apache-zookeeper-*/
+apache-maven*/
+apache-storm*/
+apache-zookeeper*/
+kafka*/
 target/

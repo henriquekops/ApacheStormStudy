@@ -19,8 +19,7 @@ public class BasicTopology extends ConfigurableTopology {
         builder.setSpout("word", new BasicSpout(), 1);
         builder.setBolt("exclaim1", new BasicBolt(), 1).shuffleGrouping("word");
         builder.setBolt("exclaim2", new BasicBolt(), 1).shuffleGrouping("exclaim1");
-
-        conf.setDebug(true);
+        
         conf.setNumWorkers(1);
 
         return submit("test", conf, builder);
