@@ -32,6 +32,6 @@ if __name__ == "__main__":
                 universal_newlines=True
             )
             for line in iter(proc.stdout.readline, ""):
-                prod.send(topic, bytes(line, "UTF-8 "))
+                prod.send(topic, bytes(" ".join(line.split()), "UTF-8"))
         except KeyboardInterrupt:
             print("\nBye")
