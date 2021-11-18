@@ -28,3 +28,6 @@ apache-storm*/
 apache-zookeeper*/
 kafka*/
 target/
+venv/
+.settings/
+.vscode/

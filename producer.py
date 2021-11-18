@@ -26,7 +26,7 @@ if __name__ == "__main__":
         try:
             prod = KafkaProducer(bootstrap_servers=servers)
             proc = subprocess.Popen(
-                "top -b",
+                "top -l 0",
                 shell=True,
                 stdout=subprocess.PIPE,
                 universal_newlines=True

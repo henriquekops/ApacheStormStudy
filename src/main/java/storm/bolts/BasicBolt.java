@@ -36,12 +36,12 @@ public class BasicBolt implements IRichBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("word"));        
+        declarer.declare(new Fields("word"));    
     }
 
     @Override
     public Map<String, Object> getComponentConfiguration() {
         return null;
-    }    
+    }
     
 } 
