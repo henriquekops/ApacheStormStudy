@@ -27,8 +27,8 @@ public class TopBolt implements IRichBolt {
     @Override
     public void execute(Tuple input) {
         final String[] procInfo = input.getString(0).split(" ");
-        LOG.info("Processing top info: {}", procInfo.toString());
         this.collector.emit(new Values(procInfo[0]));
+        LOG.info("Processing top info PID: {}", procInfo[0]);
         this.collector.ack(input);
     }
 
