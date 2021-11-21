@@ -32,7 +32,8 @@ if __name__ == "__main__":
                 universal_newlines=True
             )
             for line in iter(proc.stdout.readline, ""):
-                if not "PID" in line:
-                    prod.send(topic, bytes(" ".join(line.split()), "UTF-8"))
+                array = line.split()
+                if len(array) > 20 and "PID" not in array:
+                    prod.send(topic, bytes(" ".join(array), "UTF-8"))
         except KeyboardInterrupt:
             print("\nBye")

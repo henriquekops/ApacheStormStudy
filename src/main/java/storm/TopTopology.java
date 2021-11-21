@@ -38,10 +38,10 @@ public class TopTopology extends ConfigurableTopology {
             ), 1);
         
         builder.setBolt("filter_proc_info", new TopFilterBolt(), 1).shuffleGrouping("kafka_proc_info");
-        builder.setBolt("sum_proc_info", new TopSumBolt(), 1).fieldsGrouping("filter_proc_info", new Fields("cmd"));
+        builder.setBolt("sum_proc_info", new TopSumBolt(), 2).fieldsGrouping("filter_proc_info", new Fields("cmd"));
 
         builder.setBolt("kafka_proc_fwd", new KafkaBolt<String, String>()
-            .withProducerProperties(producerProps("kafka-broker:9092", "PID"))
+            .withProducerProperties(producerProps("kafka-broker:9092", "CMD_CPU_SUM"))
             .withTopicSelector(new DefaultTopicSelector("CMD_CPU_SUM"))
             .withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper<>("cmd", "cpu")),
             1
