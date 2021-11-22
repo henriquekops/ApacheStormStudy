@@ -11,7 +11,7 @@ from kafka import KafkaProducer
 __authors__ = 'Henrique Kops & Gabriel Castro'
 
 HELP = "Usage:\n\tpython producer.py <SERVERS> <TOPIC>"
-
+CMD = "top -l 0 -stats pid,cpu"
 
 if __name__ == "__main__":
     args = sys.argv
@@ -26,7 +26,7 @@ if __name__ == "__main__":
         try:
             prod = KafkaProducer(bootstrap_servers=servers)
             proc = subprocess.Popen(
-                "top -l 0 -stats pid,cpu",
+                CMD,
                 shell=True,
                 stdout=subprocess.PIPE,
                 universal_newlines=True
