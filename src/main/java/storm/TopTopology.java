@@ -16,8 +16,8 @@ import org.apache.storm.topology.ConfigurableTopology;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 
-import storm.bolts.TopFilterBolt;
-import storm.bolts.TopSumBolt;
+import storm.bolts.TopProcBolt;
+import storm.bolts.TopRecvBolt;
 
 public class TopTopology extends ConfigurableTopology {
 
@@ -37,16 +37,17 @@ public class TopTopology extends ConfigurableTopology {
                 .build()
             ), 1);
         
-        builder.setBolt("filter_proc_info", new TopFilterBolt(), 1).shuffleGrouping("kafka_proc_info");
-        builder.setBolt("sum_proc_info", new TopSumBolt(), 2).fieldsGrouping("filter_proc_info", new Fields("cmd"));
+        builder.setBolt("recv_proc_info", new TopRecvBolt(), 1).shuffleGrouping("kafka_proc_info");
+        builder.setBolt("proc_proc_info", new TopProcBolt(), 1).fieldsGrouping("recv_proc_info", new Fields("pid"));
 
         builder.setBolt("kafka_proc_fwd", new KafkaBolt<String, String>()
-            .withProducerProperties(producerProps("kafka-broker:9092", "CMD_CPU_SUM"))
-            .withTopicSelector(new DefaultTopicSelector("CMD_CPU_SUM"))
-            .withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper<>("cmd", "cpu")),
+            .withProducerProperties(producerProps("kafka-broker:9092", "PID_CPU_SUM"))
+            .withTopicSelector(new DefaultTopicSelector("PID_CPU_SUM"))
+            .withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper<>("pid", "cpu")),
             1
-        ).shuffleGrouping("sum_proc_info");
+        ).shuffleGrouping("proc_proc_info");
 
+        conf.setDebug(true);
         conf.setNumWorkers(1);
         
         return submit("kafka_proc_info_topology", conf, builder);

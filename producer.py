@@ -26,14 +26,14 @@ if __name__ == "__main__":
         try:
             prod = KafkaProducer(bootstrap_servers=servers)
             proc = subprocess.Popen(
-                "top -l 0",
+                "top -l 0 -stats pid,cpu",
                 shell=True,
                 stdout=subprocess.PIPE,
                 universal_newlines=True
             )
             for line in iter(proc.stdout.readline, ""):
                 array = line.split()
-                if len(array) > 20 and "PID" not in array:
+                if array and array[0].isnumeric():
                     prod.send(topic, bytes(" ".join(array), "UTF-8"))
         except KeyboardInterrupt:
             print("\nBye")
